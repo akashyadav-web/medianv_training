@@ -29,3 +29,9 @@ Efficient data handling and transformation in modern JavaScript applications.
 - filter() → select data
 - reduce() → aggregate data
 - forEach() → iterate
+- slice()-> extracts a portion of array,returns new array, doesnot change original array
+- splice()->Adds / removes / replaces elements, Modifies the original array,Returns the removed elements
+
+
+
+Returns the removed elements
