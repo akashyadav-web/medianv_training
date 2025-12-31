@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NestJS WebSocket Test</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>WebSocket Test</h1>
+  <input id="msg" placeholder="Message" />
+  <button onclick="sendMessage()">Send</button>
+  <ul id="messages"></ul>
+
+  <script>
+    const socket = io('http://localhost:3000');
+
+    socket.on('connect', () => {
+      console.log('Connected to server', socket.id);
+    });
+
+    socket.on('message', (msg) => {
+      const li = document.createElement('li');
+      li.innerText = msg;
+      document.getElementById('messages').appendChild(li);
+    });
+
+    function sendMessage() {
+      const input = document.getElementById('msg');
+      socket.emit('message', input.value);
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
