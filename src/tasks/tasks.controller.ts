@@ -1,55 +1,71 @@
-import { Body, Controller,Delete,Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import type { Task, TaskStatus } from './task.model';
-import { title } from 'process';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+
+import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
+
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { GetUser } from '../auth/get-user.decorator';
+import { TaskListResponseDto } from './dto/task-list-response.dto';
+import { TaskSingleResponseDto } from './dto/task-single-response.dto';
+
+@ApiTags('Tasks')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('tasks')
 export class TasksController {
-    constructor(private tasksService:TasksService){
+  constructor(private readonly tasksService: TasksService) {}
 
-    } 
+  @Post()
+  @ApiCreatedResponse({ type: TaskSingleResponseDto })
+  create(@Body() dto: CreateTaskDto, @GetUser() user: any) {
+    return this.tasksService.create(dto, user);
+  }
 
-    @Get()
-    getTasks(@Query() filterDto: GetTasksFilterDto):Task[]{
-        if(Object.keys(filterDto).length){
-            return this.tasksService.getTaskWithFilters(filterDto)
-        }
-        else{
-            return this.tasksService.getAllTasks();
-        }
-    } 
-
-    
-    @Get('/:id')
-    getTaskById(@Param('id') id:string):Task{
-        return this.tasksService.getTaskById(id);
-
-
-    }
- 
-   @Post()
-   createTask( @Body()
-    createTaskDto:CreateTaskDto
-    ):Task {
-    return this.tasksService.createTask(createTaskDto)
-
-}
-@Delete('/:id')
-deleteTask(@Param('id') id:string):void{
-    this.tasksService.deleteTask(id);
-}
-@Patch('/:id/status')
-updateTaskStatus(
-    @Param('id') id:string,
-    @Body() updateTaskStatusDto:UpdateTaskStatusDto,
-):Task{
-    const {status}=updateTaskStatusDto
-    return this.tasksService.updateTaskStatus(id,status);
+  @ApiOkResponse({ type: TaskListResponseDto })
+@Get()
+findAll(@GetUser() user: any) {
+  return this.tasksService.findAll(user);
 }
 
- }  
 
+  @Patch(':id')
+  @ApiOkResponse({ type: TaskSingleResponseDto })
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateTaskDto,
+    @GetUser() user: any,
+  ) {
+    return this.tasksService.update(id, dto, user);
+  }
 
+  @Delete(':id')
+  @ApiOkResponse({
+    schema: {
+      example: {
+        statusCode: 200,
+        data: null,
+        message: 'Task deleted successfully',
+      },
+    },
+  })
+  remove(@Param('id') id: string, @GetUser() user: any) {
+    return this.tasksService.remove(id, user);
+  }
+}
