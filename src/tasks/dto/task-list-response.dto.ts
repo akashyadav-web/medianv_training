@@ -5,7 +5,7 @@ export class TaskListResponseDto {
   @ApiProperty({ example: 200 })
   statusCode: number;
 
-  @ApiProperty({ type: [TaskResponseDto] }) // 👈 MUST BE ARRAY
+  @ApiProperty({ type: [TaskResponseDto] }) //  MUST BE ARRAY
   data: TaskResponseDto[];
 
   @ApiProperty({ example: 'Tasks fetched successfully' })

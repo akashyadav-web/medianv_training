@@ -40,15 +40,13 @@ export class AuthService {
       if (e.code === '23505') {
         throw new ConflictException('Username already exists');
       }
-      throw e; 
+      throw e;
     }
 
     return { message: 'User registered successfully' };
   }
 
-  async login(
-    dto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  async login(dto: AuthCredentialsDto): Promise<{ accessToken: string }> {
     const user = await this.userRepo.findOneBy({
       username: dto.username,
     });
@@ -62,11 +60,9 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      'secret',
-      { expiresIn: '1h' },
-    );
+    const token = jwt.sign({ id: user.id, username: user.username }, 'secret', {
+      expiresIn: '1h',
+    });
 
     return { accessToken: token };
   }

@@ -49,7 +49,7 @@ export class TasksService {
 
     return {
       statusCode: 200,
-      data: tasks.map(task => this.toResponse(task)),
+      data: tasks.map((task) => this.toResponse(task)),
       message: 'Tasks fetched successfully',
     };
   }

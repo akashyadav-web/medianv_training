@@ -8,10 +8,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    PassportModule,
-  ],
+  imports: [TypeOrmModule.forFeature([User]), PassportModule],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
 })

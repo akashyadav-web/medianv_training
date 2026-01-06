@@ -34,8 +34,8 @@ async function bootstrap() {
   });
 
   //ADDING GENERIC FAILURE RESPONSE TO ALL ENDPOINTS
-  Object.values(document.paths).forEach(path => {
-    Object.values(path).forEach(method => {
+  Object.values(document.paths).forEach((path) => {
+    Object.values(path).forEach((method) => {
       method.responses = {
         ...method.responses,
         '400': {

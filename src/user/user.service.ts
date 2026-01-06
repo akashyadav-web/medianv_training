@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -15,7 +19,8 @@ export class UserService {
     try {
       await this.userRepository.save(newUser);
     } catch (e) {
-      if (e.code === '23505') { // duplicate username in Postgres
+      if (e.code === '23505') {
+        // duplicate username in Postgres
         throw new ConflictException('Username already exists');
       }
       throw new InternalServerErrorException();
@@ -23,10 +28,7 @@ export class UserService {
   }
 
   //find user by username
-  async findByUsername(username:string):Promise<User | null>{
-    return this.userRepository.findOne({where:{username}})
+  async findByUsername(username: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { username } });
   }
-
-
-  
 }

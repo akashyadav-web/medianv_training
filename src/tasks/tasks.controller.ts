@@ -39,11 +39,10 @@ export class TasksController {
   }
 
   @ApiOkResponse({ type: TaskListResponseDto })
-@Get()
-findAll(@GetUser() user: any) {
-  return this.tasksService.findAll(user);
-}
-
+  @Get()
+  findAll(@GetUser() user: any) {
+    return this.tasksService.findAll(user);
+  }
 
   @Patch(':id')
   @ApiOkResponse({ type: TaskSingleResponseDto })
